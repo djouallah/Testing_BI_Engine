@@ -1,0 +1,82 @@
+DECLARE i INT64 DEFAULT 1;
+
+WHILE
+  i < 1000  DO
+  
+-- Query 1 
+  SELECT
+    StationName,
+    DAY as date,
+    sum( Mwh ) AS Mwh
+  FROM
+    `test-187010.ReportingDataset.Nem_View`
+  where DAY >= date_add(DATE "2016-12-25",INTERVAL cast(floor(rand()*100)+1 as INT64) DAY)
+  GROUP BY
+    1,
+    2
+  ORDER BY
+    date ASC 
+    Limit 1000
+   ;
+   
+ -- Query 2
+   SELECT
+    StationName,
+    SETTLEMENTDATE as date,
+    sum( INITIALMW ) AS Mw
+  FROM
+    `test-187010.ReportingDataset.Nem_View`
+  where DAY >= date_add(DATE "2017-12-25",INTERVAL cast(floor(rand()*100)+1 as INT64) DAY)
+  GROUP BY
+    1,
+    2
+  ORDER BY
+    date ASC 
+    Limit 1000
+   ;
+   
+-- Query 3
+   SELECT
+    StationName,
+    sum( Mwh ) AS Mwh
+  FROM
+    `test-187010.ReportingDataset.Nem_View`
+  where DAY >= date_add(DATE "2016-11-25",INTERVAL cast(floor(rand()*100)+1 as INT64) DAY)
+  GROUP BY
+    1
+  ORDER BY
+    Mwh DESC 
+   ;
+   
+-- Query 4
+   SELECT
+    DUID,
+    sum( Mwh ) AS Mwh
+  FROM
+    `test-187010.ReportingDataset.Nem_View`
+  where DAY >= date_add(DATE "2016-12-20",INTERVAL cast(floor(rand()*100)+1 as INT64) DAY)
+  GROUP BY
+    1
+  ORDER BY
+    Mwh ASC 
+   ;  
+   
+  -- Query 5
+   SELECT
+    DUID,StationName,
+    sum( Mwh ) AS Mwh,
+    Max(INITIALMW) as Mw
+  FROM
+    `test-187010.ReportingDataset.Nem_View`
+  where DAY >= date_add(DATE "2016-12-15",INTERVAL cast(floor(rand()*100)+1 as INT64) DAY)
+  GROUP BY
+    1,
+    2
+  ORDER BY
+    Mwh DESC 
+   ;    
+   
+SET
+  i = i + 1;
+END WHILE
+  ;
