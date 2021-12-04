@@ -1,7 +1,7 @@
 DECLARE i INT64 DEFAULT 1;
 
 WHILE
-  i < 1000  DO
+  i <= 100  DO
   
 -- Query 1 
   SELECT
