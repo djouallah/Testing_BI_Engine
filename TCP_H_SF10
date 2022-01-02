@@ -1,0 +1,670 @@
+--TPC-H SF10
+ -- Mimoune Djouallah : https://datamonkeysite.com/
+ -- Query 13 does not work, I did not understand the syntax 
+ --Query01
+SELECT
+  l_returnflag,
+  l_linestatus,
+  SUM(l_quantity) AS sum_qty,
+  SUM(l_extendedprice) AS sum_base_price,
+  SUM(l_extendedprice * (1 - l_discount)) AS sum_disc_price,
+  SUM(l_extendedprice * (1 - l_discount) * (1 + l_tax)) AS sum_charge,
+  AVG(l_quantity) AS avg_qty,
+  AVG(l_extendedprice) AS avg_price,
+  AVG(l_discount) AS avg_disc,
+  COUNT(*) AS count_order
+FROM
+  test-187010.TPCH.lineitem
+WHERE
+  l_shipdate <= CAST('1998-09-02' AS date)
+GROUP BY
+  l_returnflag,
+  l_linestatus
+ORDER BY
+  l_returnflag,
+  l_linestatus;
+  --Query02
+SELECT
+  s_acctbal,
+  s_name,
+  n_name,
+  p_partkey,
+  p_mfgr,
+  s_address,
+  s_phone,
+  s_comment
+FROM
+  test-187010.TPCH.part,
+  test-187010.TPCH.supplier,
+  test-187010.TPCH.partsupp,
+  test-187010.TPCH.nation,
+  test-187010.TPCH.region
+WHERE
+  p_partkey = ps_partkey
+  AND s_suppkey = ps_suppkey
+  AND p_size = 15
+  AND p_type LIKE '%BRASS'
+  AND s_nationkey = n_nationkey
+  AND n_regionkey = r_regionkey
+  AND r_name = 'EUROPE'
+  AND ps_supplycost = (
+  SELECT
+    MIN(ps_supplycost)
+  FROM
+    test-187010.TPCH.partsupp,
+    test-187010.TPCH.supplier,
+    test-187010.TPCH.nation,
+    test-187010.TPCH.region
+  WHERE
+    p_partkey = ps_partkey
+    AND s_suppkey = ps_suppkey
+    AND s_nationkey = n_nationkey
+    AND n_regionkey = r_regionkey
+    AND r_name = 'EUROPE')
+ORDER BY
+  s_acctbal DESC,
+  n_name,
+  s_name,
+  p_partkey
+LIMIT
+  100;
+  --Query03
+SELECT
+  l_orderkey,
+  SUM(l_extendedprice * (1 - l_discount)) AS revenue,
+  o_orderdate,
+  o_shippriority
+FROM
+  test-187010.TPCH.customer,
+  test-187010.TPCH.orders,
+  test-187010.TPCH.lineitem
+WHERE
+  c_mktsegment = 'BUILDING'
+  AND c_custkey = o_custkey
+  AND l_orderkey = o_orderkey
+  AND o_orderdate < CAST('1995-03-15' AS date)
+  AND l_shipdate > CAST('1995-03-15' AS date)
+GROUP BY
+  l_orderkey,
+  o_orderdate,
+  o_shippriority
+ORDER BY
+  revenue DESC,
+  o_orderdate
+LIMIT
+  10;
+  --Query04
+SELECT
+  o_orderpriority,
+  COUNT(*) AS order_count
+FROM
+  test-187010.TPCH.orders
+WHERE
+  o_orderdate >= CAST('1993-07-01' AS date)
+  AND o_orderdate < CAST('1993-10-01' AS date)
+  AND EXISTS (
+  SELECT
+    *
+  FROM
+    test-187010.TPCH.lineitem
+  WHERE
+    l_orderkey = o_orderkey
+    AND l_commitdate < l_receiptdate)
+GROUP BY
+  o_orderpriority
+ORDER BY
+  o_orderpriority;
+  --Query05
+SELECT
+  n_name,
+  SUM(l_extendedprice * (1 - l_discount)) AS revenue
+FROM
+  test-187010.TPCH.customer,
+  test-187010.TPCH.orders,
+  test-187010.TPCH.lineitem,
+  test-187010.TPCH.supplier,
+  test-187010.TPCH.nation,
+  test-187010.TPCH.region
+WHERE
+  c_custkey = o_custkey
+  AND l_orderkey = o_orderkey
+  AND l_suppkey = s_suppkey
+  AND c_nationkey = s_nationkey
+  AND s_nationkey = n_nationkey
+  AND n_regionkey = r_regionkey
+  AND r_name = 'ASIA'
+  AND o_orderdate >= CAST('1994-01-01' AS date)
+  AND o_orderdate < CAST('1995-01-01' AS date)
+GROUP BY
+  n_name
+ORDER BY
+  revenue DESC;
+  --Query06
+SELECT
+  SUM(l_extendedprice * l_discount) AS revenue
+FROM
+  test-187010.TPCH.lineitem
+WHERE
+  l_shipdate >= CAST('1994-01-01' AS date)
+  AND l_shipdate < CAST('1995-01-01' AS date)
+  AND l_discount BETWEEN 0.05
+  AND 0.07
+  AND l_quantity < 24;
+  --Query07
+SELECT
+  supp_nation,
+  cust_nation,
+  l_year,
+  SUM(volume) AS revenue
+FROM (
+  SELECT
+    n1.n_name AS supp_nation,
+    n2.n_name AS cust_nation,
+    EXTRACT(year
+    FROM
+      l_shipdate) AS l_year,
+    l_extendedprice * (1 - l_discount) AS volume
+  FROM
+    test-187010.TPCH.supplier,
+    test-187010.TPCH.lineitem,
+    test-187010.TPCH.orders,
+    test-187010.TPCH.customer,
+    test-187010.TPCH.nation n1,
+    test-187010.TPCH.nation n2
+  WHERE
+    s_suppkey = l_suppkey
+    AND o_orderkey = l_orderkey
+    AND c_custkey = o_custkey
+    AND s_nationkey = n1.n_nationkey
+    AND c_nationkey = n2.n_nationkey
+    AND ((n1.n_name = 'FRANCE'
+        AND n2.n_name = 'GERMANY')
+      OR (n1.n_name = 'GERMANY'
+        AND n2.n_name = 'FRANCE'))
+    AND l_shipdate BETWEEN CAST('1995-01-01' AS date)
+    AND CAST('1996-12-31' AS date)) AS shipping
+GROUP BY
+  supp_nation,
+  cust_nation,
+  l_year
+ORDER BY
+  supp_nation,
+  cust_nation,
+  l_year;
+  --Query08
+SELECT
+  o_year,
+  SUM(
+    CASE
+      WHEN nation = 'BRAZIL' THEN volume
+    ELSE
+    0
+  END
+    ) / SUM(volume) AS mkt_share
+FROM (
+  SELECT
+    EXTRACT(year
+    FROM
+      o_orderdate) AS o_year,
+    l_extendedprice * (1 - l_discount) AS volume,
+    n2.n_name AS nation
+  FROM
+    test-187010.TPCH.part,
+    test-187010.TPCH.supplier,
+    test-187010.TPCH.lineitem,
+    test-187010.TPCH.orders,
+    test-187010.TPCH.customer,
+    test-187010.TPCH.nation n1,
+    test-187010.TPCH.nation n2,
+    test-187010.TPCH.region
+  WHERE
+    p_partkey = l_partkey
+    AND s_suppkey = l_suppkey
+    AND l_orderkey = o_orderkey
+    AND o_custkey = c_custkey
+    AND c_nationkey = n1.n_nationkey
+    AND n1.n_regionkey = r_regionkey
+    AND r_name = 'AMERICA'
+    AND s_nationkey = n2.n_nationkey
+    AND o_orderdate BETWEEN CAST('1995-01-01' AS date)
+    AND CAST('1996-12-31' AS date)
+    AND p_type = 'ECONOMY ANODIZED STEEL') AS all_nations
+GROUP BY
+  o_year
+ORDER BY
+  o_year;
+  -- Query09
+SELECT
+  nation,
+  o_year,
+  SUM(amount) AS sum_profit
+FROM (
+  SELECT
+    n_name AS nation,
+    EXTRACT(year
+    FROM
+      o_orderdate) AS o_year,
+    l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity AS amount
+  FROM
+    test-187010.TPCH.part,
+    test-187010.TPCH.supplier,
+    test-187010.TPCH.lineitem,
+    test-187010.TPCH.partsupp,
+    test-187010.TPCH.orders,
+    test-187010.TPCH.nation
+  WHERE
+    s_suppkey = l_suppkey
+    AND ps_suppkey = l_suppkey
+    AND ps_partkey = l_partkey
+    AND p_partkey = l_partkey
+    AND o_orderkey = l_orderkey
+    AND s_nationkey = n_nationkey
+    AND p_name LIKE '%green%') AS profit
+GROUP BY
+  nation,
+  o_year
+ORDER BY
+  nation,
+  o_year DESC;
+  --Query10
+SELECT
+  c_custkey,
+  c_name,
+  SUM(l_extendedprice * (1 - l_discount)) AS revenue,
+  c_acctbal,
+  n_name,
+  c_address,
+  c_phone,
+  c_comment
+FROM
+  test-187010.TPCH.customer,
+  test-187010.TPCH.orders,
+  test-187010.TPCH.lineitem,
+  test-187010.TPCH.nation
+WHERE
+  c_custkey = o_custkey
+  AND l_orderkey = o_orderkey
+  AND o_orderdate >= CAST('1993-10-01' AS date)
+  AND o_orderdate < CAST('1994-01-01' AS date)
+  AND l_returnflag = 'R'
+  AND c_nationkey = n_nationkey
+GROUP BY
+  c_custkey,
+  c_name,
+  c_acctbal,
+  c_phone,
+  n_name,
+  c_address,
+  c_comment
+ORDER BY
+  revenue DESC
+LIMIT
+  20;
+  --Query11
+SELECT
+  ps_partkey,
+  SUM(ps_supplycost * ps_availqty) AS value
+FROM
+  test-187010.TPCH.partsupp,
+  test-187010.TPCH.supplier,
+  test-187010.TPCH.nation
+WHERE
+  ps_suppkey = s_suppkey
+  AND s_nationkey = n_nationkey
+  AND n_name = 'GERMANY'
+GROUP BY
+  ps_partkey
+HAVING
+  SUM(ps_supplycost * ps_availqty) > (
+  SELECT
+    SUM(ps_supplycost * ps_availqty) * 0.0001000000
+  FROM
+    test-187010.TPCH.partsupp,
+    test-187010.TPCH.supplier,
+    test-187010.TPCH.nation
+  WHERE
+    ps_suppkey = s_suppkey
+    AND s_nationkey = n_nationkey
+    AND n_name = 'GERMANY')
+ORDER BY
+  value DESC;
+  --Query12
+SELECT
+  l_shipmode,
+  SUM(
+    CASE
+      WHEN o_orderpriority = '1-URGENT' OR o_orderpriority = '2-HIGH' THEN 1
+    ELSE
+    0
+  END
+    ) AS high_line_count,
+  SUM(
+    CASE
+      WHEN o_orderpriority <> '1-URGENT' AND o_orderpriority <> '2-HIGH' THEN 1
+    ELSE
+    0
+  END
+    ) AS low_line_count
+FROM
+  test-187010.TPCH.orders,
+  test-187010.TPCH.lineitem
+WHERE
+  o_orderkey = l_orderkey
+  AND l_shipmode IN ('MAIL',
+    'SHIP')
+  AND l_commitdate < l_receiptdate
+  AND l_shipdate < l_commitdate
+  AND l_receiptdate >= CAST('1994-01-01' AS date)
+  AND l_receiptdate < CAST('1995-01-01' AS date)
+GROUP BY
+  l_shipmode
+ORDER BY
+  l_shipmode;
+  --Query14
+SELECT
+  100.00 * SUM(
+    CASE
+      WHEN p_type LIKE 'PROMO%' THEN l_extendedprice * (1 - l_discount)
+    ELSE
+    0
+  END
+    ) / SUM(l_extendedprice * (1 - l_discount)) AS promo_revenue
+FROM
+  test-187010.TPCH.lineitem,
+  test-187010.TPCH.part
+WHERE
+  l_partkey = p_partkey
+  AND l_shipdate >= date '1995-09-01'
+  AND l_shipdate < CAST('1995-10-01' AS date);
+  --Query15
+SELECT
+  s_suppkey,
+  s_name,
+  s_address,
+  s_phone,
+  total_revenue
+FROM
+  test-187010.TPCH.supplier,
+  (
+  SELECT
+    l_suppkey AS supplier_no,
+    SUM(l_extendedprice * (1 - l_discount)) AS total_revenue
+  FROM
+    test-187010.TPCH.lineitem
+  WHERE
+    l_shipdate >= CAST('1996-01-01' AS date)
+    AND l_shipdate < CAST('1996-04-01' AS date)
+  GROUP BY
+    supplier_no) revenue0
+WHERE
+  s_suppkey = supplier_no
+  AND total_revenue = (
+  SELECT
+    MAX(total_revenue)
+  FROM (
+    SELECT
+      l_suppkey AS supplier_no,
+      SUM(l_extendedprice * (1 - l_discount)) AS total_revenue
+    FROM
+      test-187010.TPCH.lineitem
+    WHERE
+      l_shipdate >= CAST('1996-01-01' AS date)
+      AND l_shipdate < CAST('1996-04-01' AS date)
+    GROUP BY
+      supplier_no) revenue1)
+ORDER BY
+  s_suppkey;
+  --Query16
+SELECT
+  p_brand,
+  p_type,
+  p_size,
+  COUNT(DISTINCT ps_suppkey) AS supplier_cnt
+FROM
+  test-187010.TPCH.partsupp,
+  test-187010.TPCH.part
+WHERE
+  p_partkey = ps_partkey
+  AND p_brand <> 'Brand#45'
+  AND p_type NOT LIKE 'MEDIUM POLISHED%'
+  AND p_size IN (49,
+    14,
+    23,
+    45,
+    19,
+    3,
+    36,
+    9)
+  AND ps_suppkey NOT IN (
+  SELECT
+    s_suppkey
+  FROM
+    test-187010.TPCH.supplier
+  WHERE
+    s_comment LIKE '%Customer%Complaints%')
+GROUP BY
+  p_brand,
+  p_type,
+  p_size
+ORDER BY
+  supplier_cnt DESC,
+  p_brand,
+  p_type,
+  p_size;
+  --Query17
+SELECT
+  SUM(l_extendedprice) / 7.0 AS avg_yearly
+FROM
+  test-187010.TPCH.lineitem,
+  test-187010.TPCH.part
+WHERE
+  p_partkey = l_partkey
+  AND p_brand = 'Brand#23'
+  AND p_container = 'MED BOX'
+  AND l_quantity < (
+  SELECT
+    0.2 * AVG(l_quantity)
+  FROM
+    test-187010.TPCH.lineitem
+  WHERE
+    l_partkey = p_partkey);
+  --Query18
+SELECT
+  c_name,
+  c_custkey,
+  o_orderkey,
+  o_orderdate,
+  o_totalprice,
+  SUM(l_quantity)
+FROM
+  test-187010.TPCH.customer,
+  test-187010.TPCH.orders,
+  test-187010.TPCH.lineitem
+WHERE
+  o_orderkey IN (
+  SELECT
+    l_orderkey
+  FROM
+    test-187010.TPCH.lineitem
+  GROUP BY
+    l_orderkey
+  HAVING
+    SUM(l_quantity) > 300)
+  AND c_custkey = o_custkey
+  AND o_orderkey = l_orderkey
+GROUP BY
+  c_name,
+  c_custkey,
+  o_orderkey,
+  o_orderdate,
+  o_totalprice
+ORDER BY
+  o_totalprice DESC,
+  o_orderdate
+LIMIT
+  100;
+  --Query19
+SELECT
+  SUM(l_extendedprice * (1 - l_discount)) AS revenue
+FROM
+  test-187010.TPCH.lineitem,
+  test-187010.TPCH.part
+WHERE
+  (p_partkey = l_partkey
+    AND p_brand = 'Brand#12'
+    AND p_container IN ('SM CASE',
+      'SM BOX',
+      'SM PACK',
+      'SM PKG')
+    AND l_quantity >= 1
+    AND l_quantity <= 1 + 10
+    AND p_size BETWEEN 1
+    AND 5
+    AND l_shipmode IN ('AIR',
+      'AIR REG')
+    AND l_shipinstruct = 'DELIVER IN PERSON')
+  OR (p_partkey = l_partkey
+    AND p_brand = 'Brand#23'
+    AND p_container IN ('MED BAG',
+      'MED BOX',
+      'MED PKG',
+      'MED PACK')
+    AND l_quantity >= 10
+    AND l_quantity <= 10 + 10
+    AND p_size BETWEEN 1
+    AND 10
+    AND l_shipmode IN ('AIR',
+      'AIR REG')
+    AND l_shipinstruct = 'DELIVER IN PERSON')
+  OR (p_partkey = l_partkey
+    AND p_brand = 'Brand#34'
+    AND p_container IN ('LG CASE',
+      'LG BOX',
+      'LG PACK',
+      'LG PKG')
+    AND l_quantity >= 20
+    AND l_quantity <= 20 + 10
+    AND p_size BETWEEN 1
+    AND 15
+    AND l_shipmode IN ('AIR',
+      'AIR REG')
+    AND l_shipinstruct = 'DELIVER IN PERSON');
+  --Query20
+SELECT
+  s_name,
+  s_address
+FROM
+  test-187010.TPCH.supplier,
+  test-187010.TPCH.nation
+WHERE
+  s_suppkey IN (
+  SELECT
+    ps_suppkey
+  FROM
+    test-187010.TPCH.partsupp
+  WHERE
+    ps_partkey IN (
+    SELECT
+      p_partkey
+    FROM
+      test-187010.TPCH.part
+    WHERE
+      p_name LIKE 'forest%')
+    AND ps_availqty > (
+    SELECT
+      0.5 * SUM(l_quantity)
+    FROM
+      test-187010.TPCH.lineitem
+    WHERE
+      l_partkey = ps_partkey
+      AND l_suppkey = ps_suppkey
+      AND l_shipdate >= CAST('1994-01-01' AS date)
+      AND l_shipdate < CAST('1995-01-01' AS date)))
+  AND s_nationkey = n_nationkey
+  AND n_name = 'CANADA'
+ORDER BY
+  s_name;
+  --Query21
+SELECT
+  s_name,
+  COUNT(*) AS numwait
+FROM
+  test-187010.TPCH.supplier,
+  test-187010.TPCH.lineitem l1,
+  test-187010.TPCH.orders,
+  test-187010.TPCH.nation
+WHERE
+  s_suppkey = l1.l_suppkey
+  AND o_orderkey = l1.l_orderkey
+  AND o_orderstatus = 'F'
+  AND l1.l_receiptdate > l1.l_commitdate
+  AND EXISTS (
+  SELECT
+    *
+  FROM
+    test-187010.TPCH.lineitem l2
+  WHERE
+    l2.l_orderkey = l1.l_orderkey
+    AND l2.l_suppkey <> l1.l_suppkey)
+  AND NOT EXISTS (
+  SELECT
+    *
+  FROM
+    test-187010.TPCH.lineitem l3
+  WHERE
+    l3.l_orderkey = l1.l_orderkey
+    AND l3.l_suppkey <> l1.l_suppkey
+    AND l3.l_receiptdate > l3.l_commitdate)
+  AND s_nationkey = n_nationkey
+  AND n_name = 'SAUDI ARABIA'
+GROUP BY
+  s_name
+ORDER BY
+  numwait DESC,
+  s_name
+LIMIT
+  100;
+  --Query22
+SELECT
+  cntrycode,
+  COUNT(*) AS numcust,
+  SUM(c_acctbal) AS totacctbal
+FROM (
+  SELECT
+    SUBSTRING(c_phone, 1, 2) AS cntrycode,
+    c_acctbal
+  FROM
+    test-187010.TPCH.customer
+  WHERE
+    SUBSTRING(c_phone, 1, 2) IN ('13',
+      '31',
+      '23',
+      '29',
+      '30',
+      '18',
+      '17')
+    AND c_acctbal > (
+    SELECT
+      AVG(c_acctbal)
+    FROM
+      test-187010.TPCH.customer
+    WHERE
+      c_acctbal > 0.00
+      AND SUBSTRING(c_phone, 1, 2) IN ('13',
+        '31',
+        '23',
+        '29',
+        '30',
+        '18',
+        '17'))
+    AND NOT EXISTS (
+    SELECT
+      *
+    FROM
+      test-187010.TPCH.orders
+    WHERE
+      o_custkey = c_custkey)) AS custsale
+GROUP BY
+  cntrycode
+ORDER BY
+  cntrycode;
