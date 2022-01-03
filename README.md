@@ -1,5 +1,8 @@
-# Testing_BI_Engine using TPC-H
-unfortunately not all Queries are accelerated by BigQuery BI Engine
+# Testing BigQuery BI Engine using TPC-H
+
+Disclosure : the Purpose of the Benchmark is hopefully to push the Product team to make all Queries accelerated by BI Engine :)
+
+Unfortunately not all Queries are accelerated by BigQuery BI Engine (Currently only 6)
 
 Currently BI Engine is limited to a join with 5 Million Dimension Table
 
