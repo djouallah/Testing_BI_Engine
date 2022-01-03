@@ -1,8 +1,6 @@
---TPC-H SF10
- -- Mimoune Djouallah : https://datamonkeysite.com/
- -- Query 13 does not work, I did not understand the syntax 
- --Query01
+  -- TPC-H SF10
 SELECT
+  --Query01
   l_returnflag,
   l_linestatus,
   SUM(l_quantity) AS sum_qty,
@@ -23,8 +21,8 @@ GROUP BY
 ORDER BY
   l_returnflag,
   l_linestatus;
-  --Query02
 SELECT
+  --Query02
   s_acctbal,
   s_name,
   n_name,
@@ -68,8 +66,8 @@ ORDER BY
   p_partkey
 LIMIT
   100;
-  --Query03
 SELECT
+  --Query03
   l_orderkey,
   SUM(l_extendedprice * (1 - l_discount)) AS revenue,
   o_orderdate,
@@ -93,8 +91,8 @@ ORDER BY
   o_orderdate
 LIMIT
   10;
-  --Query04
 SELECT
+  --Query04
   o_orderpriority,
   COUNT(*) AS order_count
 FROM
@@ -114,8 +112,8 @@ GROUP BY
   o_orderpriority
 ORDER BY
   o_orderpriority;
-  --Query05
 SELECT
+  --Query05
   n_name,
   SUM(l_extendedprice * (1 - l_discount)) AS revenue
 FROM
@@ -139,8 +137,8 @@ GROUP BY
   n_name
 ORDER BY
   revenue DESC;
-  --Query06
 SELECT
+  --Query06
   SUM(l_extendedprice * l_discount) AS revenue
 FROM
   test-187010.TPCH.lineitem
@@ -150,8 +148,8 @@ WHERE
   AND l_discount BETWEEN 0.05
   AND 0.07
   AND l_quantity < 24;
-  --Query07
 SELECT
+  --Query07
   supp_nation,
   cust_nation,
   l_year,
@@ -191,8 +189,8 @@ ORDER BY
   supp_nation,
   cust_nation,
   l_year;
-  --Query08
 SELECT
+  --Query08
   o_year,
   SUM(
     CASE
@@ -233,8 +231,8 @@ GROUP BY
   o_year
 ORDER BY
   o_year;
-  -- Query09
 SELECT
+  --Query09
   nation,
   o_year,
   SUM(amount) AS sum_profit
@@ -266,8 +264,8 @@ GROUP BY
 ORDER BY
   nation,
   o_year DESC;
-  --Query10
 SELECT
+  --Query10
   c_custkey,
   c_name,
   SUM(l_extendedprice * (1 - l_discount)) AS revenue,
@@ -300,8 +298,8 @@ ORDER BY
   revenue DESC
 LIMIT
   20;
-  --Query11
 SELECT
+  --Query11
   ps_partkey,
   SUM(ps_supplycost * ps_availqty) AS value
 FROM
@@ -328,8 +326,8 @@ HAVING
     AND n_name = 'GERMANY')
 ORDER BY
   value DESC;
-  --Query12
 SELECT
+  --Query12
   l_shipmode,
   SUM(
     CASE
@@ -360,8 +358,30 @@ GROUP BY
   l_shipmode
 ORDER BY
   l_shipmode;
-  --Query14
 SELECT
+  --Query13
+  c_count,
+  COUNT(*) AS custdist
+FROM (
+  SELECT
+    c_custkey,
+    COUNT(o_orderkey) AS c_count
+  FROM
+    test-187010.TPCH.customer
+  LEFT OUTER JOIN
+    test-187010.TPCH.orders
+  ON
+    c_custkey = o_custkey
+    AND o_comment NOT LIKE '%special%requests%'
+  GROUP BY
+    c_custkey) AS c_orders
+GROUP BY
+  c_count
+ORDER BY
+  custdist DESC,
+  c_count DESC;
+SELECT
+  --Query14
   100.00 * SUM(
     CASE
       WHEN p_type LIKE 'PROMO%' THEN l_extendedprice * (1 - l_discount)
@@ -376,8 +396,8 @@ WHERE
   l_partkey = p_partkey
   AND l_shipdate >= date '1995-09-01'
   AND l_shipdate < CAST('1995-10-01' AS date);
-  --Query15
 SELECT
+  --Query15
   s_suppkey,
   s_name,
   s_address,
@@ -414,8 +434,8 @@ WHERE
       supplier_no) revenue1)
 ORDER BY
   s_suppkey;
-  --Query16
 SELECT
+  --Query16
   p_brand,
   p_type,
   p_size,
@@ -451,8 +471,8 @@ ORDER BY
   p_brand,
   p_type,
   p_size;
-  --Query17
 SELECT
+  --Query17
   SUM(l_extendedprice) / 7.0 AS avg_yearly
 FROM
   test-187010.TPCH.lineitem,
@@ -468,8 +488,8 @@ WHERE
     test-187010.TPCH.lineitem
   WHERE
     l_partkey = p_partkey);
-  --Query18
 SELECT
+  --Query18
   c_name,
   c_custkey,
   o_orderkey,
@@ -503,8 +523,8 @@ ORDER BY
   o_orderdate
 LIMIT
   100;
-  --Query19
 SELECT
+  --Query19
   SUM(l_extendedprice * (1 - l_discount)) AS revenue
 FROM
   test-187010.TPCH.lineitem,
@@ -549,8 +569,8 @@ WHERE
     AND l_shipmode IN ('AIR',
       'AIR REG')
     AND l_shipinstruct = 'DELIVER IN PERSON');
-  --Query20
 SELECT
+  --Query20
   s_name,
   s_address
 FROM
@@ -584,8 +604,8 @@ WHERE
   AND n_name = 'CANADA'
 ORDER BY
   s_name;
-  --Query21
 SELECT
+  --Query21
   s_name,
   COUNT(*) AS numwait
 FROM
@@ -624,8 +644,8 @@ ORDER BY
   s_name
 LIMIT
   100;
-  --Query22
 SELECT
+  --Query22
   cntrycode,
   COUNT(*) AS numcust,
   SUM(c_acctbal) AS totacctbal
