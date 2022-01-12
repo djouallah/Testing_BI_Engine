@@ -1,11 +1,12 @@
 # Testing Query Engine using TPC-H
 
-it started as testing BigQuery BI engine, but I did found it easy, it is easy to test other Engine too, Please check this blog for Background
+it started as testing BigQuery BI engine, but I did found it easyto test other Engine too, Please check this blog for Background
 
 https://datamonkeysite.com/2022/01/07/benchmark-snowflake-bigquery-singlestore-and-databricks-using-tpc-h-sf10/
 
-Disclosure : the Original Purpose of the Benchmark is hopefully to push the Product team to make all Queries accelerated by BI Engine :)
+it is not supposed to be very accurate or an official benchmark, but just to get a general impression of the performance.
 
+The Original Purpose of the Benchmark was to troll BiQuery Product team to make all Queries accelerated by BI Engine :)
 
 
 Unfortunately not all Queries are accelerated by BigQuery BI Engine (Currently only 6)
