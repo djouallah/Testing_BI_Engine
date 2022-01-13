@@ -1,6 +1,6 @@
 # Testing Query Engine using TPC-H
 
-it started as testing BigQuery BI engine, but I did found it easyto test other Engine too, Please check this blog for Background
+it started as testing BigQuery BI engine, but I did found it easy to test other Engine too, Please check this blog for Background
 
 https://datamonkeysite.com/2022/01/07/benchmark-snowflake-bigquery-singlestore-and-databricks-using-tpc-h-sf10/
 
