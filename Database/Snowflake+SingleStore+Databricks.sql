@@ -1,4 +1,6 @@
-ALTER SESSION SET USE_CACHED_RESULT = FALSE;
+-- for Snowflake ALTER SESSION SET USE_CACHED_RESULT = FALSE;
+-- for Datbaricks SET   use_cached_result = false;
+-- Singlestore does not have a result cache
 
 
 SELECT
