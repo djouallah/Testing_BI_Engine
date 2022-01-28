@@ -5,9 +5,9 @@ con = duckdb.connect(database=':memory:')
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./1.json';
-SET memory_limit='5GB';
-PRAGMA threads=4;
+PRAGMA profile_output='./json/1.json';
+
+
 
 CREATE VIEW partsupp AS SELECT * FROM 'partsupp.parquet';
 CREATE VIEW part AS SELECT * FROM 'part.parquet';
@@ -50,7 +50,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./2.json';
+PRAGMA profile_output='./json/2.json';
 
 
 SELECT
@@ -108,7 +108,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./3.json';
+PRAGMA profile_output='./json/3.json';
 
 
 SELECT
@@ -144,7 +144,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./4.json';
+PRAGMA profile_output='./json/4.json';
 
 
 SELECT
@@ -177,7 +177,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./5.json';
+PRAGMA profile_output='./json/5.json';
 
 
 SELECT
@@ -213,7 +213,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./6.json';
+PRAGMA profile_output='./json/6.json';
 
 
 SELECT
@@ -235,7 +235,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./7.json';
+PRAGMA profile_output='./json/7.json';
 
 
 SELECT
@@ -297,7 +297,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./8.json';
+PRAGMA profile_output='./json/8.json';
 
 
 SELECT
@@ -353,9 +353,8 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./9.json';
-PRAGMA profile_output='./1.json';
-SET memory_limit='5GB';
+PRAGMA profile_output='./json/9.json';
+
 
 
 
@@ -404,7 +403,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./10.json';
+PRAGMA profile_output='./json/10.json';
 
 
 SELECT
@@ -450,7 +449,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./11.json';
+PRAGMA profile_output='./json/11.json';
 
 
 SELECT
@@ -491,7 +490,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./12.json';
+PRAGMA profile_output='./json/12.json';
 
 
 SELECT
@@ -533,7 +532,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./13.json';
+PRAGMA profile_output='./json/13.json';
 
 
 SELECT
@@ -566,7 +565,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./14.json';
+PRAGMA profile_output='./json/14.json';
 
 
 SELECT
@@ -593,7 +592,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./15.json';
+PRAGMA profile_output='./json/15.json';
 
 
 SELECT
@@ -647,7 +646,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./16.json';
+PRAGMA profile_output='./json/16.json';
 
 
 SELECT
@@ -699,7 +698,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./17.json';
+PRAGMA profile_output='./json/17.json';
 
 
 SELECT
@@ -726,7 +725,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./18.json';
+PRAGMA profile_output='./json/18.json';
 
 
 SELECT
@@ -772,7 +771,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./19.json';
+PRAGMA profile_output='./json/19.json';
 
 
 SELECT
@@ -837,7 +836,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./20.json';
+PRAGMA profile_output='./json/20.json';
 
 
 SELECT
@@ -884,7 +883,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./21.json';
+PRAGMA profile_output='./json/21.json';
 
 
 SELECT
@@ -935,7 +934,7 @@ print(df)
 
 df =con.execute('''
 PRAGMA enable_profiling='json';
-PRAGMA profile_output='./22.json';
+PRAGMA profile_output='./json/22.json';
 
 
 SELECT
