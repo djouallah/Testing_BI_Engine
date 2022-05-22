@@ -16,6 +16,11 @@ TPC-H reference : http://tpc.org/tpc_documents_current_versions/pdf/tpc-h_v3.0.0
 Synapse Serverless seems to have a limitation where if you send more than 4 Queries, the Queries start to became very slow.
 
 
+# Note Regarding AlloyDB
+
+I had to add a lot of index to make AlloyDB finish in a resonable time, for example Query 20 take up to 30 minutes without foreign key index. 
+
+
 
 # Note Regarding BigQuery BI Engine
 
