@@ -1,3 +1,4 @@
+-- Used for Serverless and SQL Server with columnstore
 SELECT
     --Query01
     l_returnflag,
