@@ -13,7 +13,7 @@ TPC-H reference : http://tpc.org/tpc_documents_current_versions/pdf/tpc-h_v3.0.0
 
 # Synapse Serverless
 
-Synapse Serverless seems to have a limitation where if you send more than 4 Queries, the Queries start to became very slow.
+Synapse Serverless seems to have a limitation where if you send more than 4 Queries, the Queries start to became very slow, The Engine by itself is not slow, I think it is throttled.
 
 
 # AlloyDB
