@@ -26,7 +26,7 @@ I had to add a lot of indexes to make AlloyDB finish in a reasonable time, for e
 The Original Purpose of the Benchmark was to troll BiQuery Product team to make all Queries accelerated by BI Engine :)
 
 
-Unfortunately not all Queries are accelerated by BigQuery BI Engine (Currently only 6)
+Unfortunately not all Queries are accelerated by BigQuery BI Engine (Currently only 11)
 
 Currently BI Engine is limited to a join with 5 Million Dimension Table
 
