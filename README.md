@@ -11,18 +11,16 @@ it is not supposed to be very accurate or an official benchmark, but just to get
 TPC-H reference : http://tpc.org/tpc_documents_current_versions/pdf/tpc-h_v3.0.0.pdf
 
 
-# Note Regarding Synapse Serverless
+# Synapse Serverless
 
 Synapse Serverless seems to have a limitation where if you send more than 4 Queries, the Queries start to became very slow.
 
 
-# Note Regarding AlloyDB
+# AlloyDB
 
-I had to add a lot of index to make AlloyDB finish in a resonable time, for example Query 20 take up to 30 minutes without foreign key index. 
+I had to add a lot of indexes to make AlloyDB finish in a reasonable time, for example Query 20 take up to 30 minutes without foreign key index. 
 
-
-
-# Note Regarding BigQuery BI Engine
+# BigQuery BI Engine
 
 
 The Original Purpose of the Benchmark was to troll BiQuery Product team to make all Queries accelerated by BI Engine :)
@@ -38,8 +36,6 @@ see Current Limitations
 https://cloud.google.com/bi-engine/docs/sql-interface-overview#limitations
 
 TPC-H SF10 use up to 8 joins and a dimension Table with 15 Million Records.
-
-
 
 Results for BI Engine Only : https://datastudio.google.com/reporting/b162bcc1-baee-4af5-995f-6155c939d742/page/p_v72vuqfvqc
 
