@@ -4,7 +4,7 @@ it started as testing BigQuery BI engine, but I did found it easy to test other 
 
 https://datamonkeysite.com/2022/01/07/benchmark-snowflake-bigquery-singlestore-and-databricks-using-tpc-h-sf10/
 
-so Far Tested Snowflake, BigQuery, Databrciks SQL, DuckDB and Synpase Serverless
+so Far Tested Snowflake, BigQuery, Databrciks SQL, DuckDB, Synpase Serverless, SQL Server with Coumnstore and AlloyDB
 
 it is not supposed to be very accurate or an official benchmark, but just to get a general impression of the performance.
 
