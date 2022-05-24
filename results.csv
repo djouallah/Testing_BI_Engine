@@ -1,4 +1,4 @@
-﻿TPCH,Snowflake,SQLServer (columnstore),SingleStore,BigQuery,Databricks,DuckDB**,AlloyDB,Synapse_Serverless
+﻿TPCH,Snowflake,PowerBI Datamart,SingleStore,BigQuery,Databricks,DuckDB**,AlloyDB,Synapse_Serverless
 '--Query01,1.5,1.69425,0.99,0.349,1.43,2.925584,21.932546,41.89522222
 '--Query02,1.37,0.24475,0.56,1.866,1.47,0.587252,4.555007,27.02825
 '--Query03,0.88,0.48125,0.67,1.6245,2.79,1.929619,11.536989,39.69713333
