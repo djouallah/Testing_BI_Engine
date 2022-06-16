@@ -1,4 +1,6 @@
   -- TPC-H SF10
+set @@dataset_project_id="test-187010";
+set @@dataset_id="TPCH";
 SELECT
   --Query01
   l_returnflag,
@@ -12,7 +14,7 @@ SELECT
   AVG(l_discount) AS avg_disc,
   COUNT(*) AS count_order
 FROM
-  test-187010.TPCH.lineitem
+  lineitem
 WHERE
   l_shipdate <= CAST('1998-09-02' AS date)
 GROUP BY
@@ -32,11 +34,11 @@ SELECT
   s_phone,
   s_comment
 FROM
-  test-187010.TPCH.part,
-  test-187010.TPCH.supplier,
-  test-187010.TPCH.partsupp,
-  test-187010.TPCH.nation,
-  test-187010.TPCH.region
+  part,
+  supplier,
+  partsupp,
+  nation,
+  region
 WHERE
   p_partkey = ps_partkey
   AND s_suppkey = ps_suppkey
@@ -49,10 +51,10 @@ WHERE
   SELECT
     MIN(ps_supplycost)
   FROM
-    test-187010.TPCH.partsupp,
-    test-187010.TPCH.supplier,
-    test-187010.TPCH.nation,
-    test-187010.TPCH.region
+    partsupp,
+    supplier,
+    nation,
+    region
   WHERE
     p_partkey = ps_partkey
     AND s_suppkey = ps_suppkey
@@ -73,9 +75,9 @@ SELECT
   o_orderdate,
   o_shippriority
 FROM
-  test-187010.TPCH.customer,
-  test-187010.TPCH.orders,
-  test-187010.TPCH.lineitem
+  customer,
+  orders,
+  lineitem
 WHERE
   c_mktsegment = 'BUILDING'
   AND c_custkey = o_custkey
@@ -96,7 +98,7 @@ SELECT
   o_orderpriority,
   COUNT(*) AS order_count
 FROM
-  test-187010.TPCH.orders
+  orders
 WHERE
   o_orderdate >= CAST('1993-07-01' AS date)
   AND o_orderdate < CAST('1993-10-01' AS date)
@@ -104,7 +106,7 @@ WHERE
   SELECT
     *
   FROM
-    test-187010.TPCH.lineitem
+    lineitem
   WHERE
     l_orderkey = o_orderkey
     AND l_commitdate < l_receiptdate)
@@ -117,12 +119,12 @@ SELECT
   n_name,
   SUM(l_extendedprice * (1 - l_discount)) AS revenue
 FROM
-  test-187010.TPCH.customer,
-  test-187010.TPCH.orders,
-  test-187010.TPCH.lineitem,
-  test-187010.TPCH.supplier,
-  test-187010.TPCH.nation,
-  test-187010.TPCH.region
+  customer,
+  orders,
+  lineitem,
+  supplier,
+  nation,
+  region
 WHERE
   c_custkey = o_custkey
   AND l_orderkey = o_orderkey
@@ -141,7 +143,7 @@ SELECT
   --Query06
   SUM(l_extendedprice * l_discount) AS revenue
 FROM
-  test-187010.TPCH.lineitem
+  lineitem
 WHERE
   l_shipdate >= CAST('1994-01-01' AS date)
   AND l_shipdate < CAST('1995-01-01' AS date)
@@ -163,12 +165,12 @@ FROM (
       l_shipdate) AS l_year,
     l_extendedprice * (1 - l_discount) AS volume
   FROM
-    test-187010.TPCH.supplier,
-    test-187010.TPCH.lineitem,
-    test-187010.TPCH.orders,
-    test-187010.TPCH.customer,
-    test-187010.TPCH.nation n1,
-    test-187010.TPCH.nation n2
+    supplier,
+    lineitem,
+    orders,
+    customer,
+    nation n1,
+    nation n2
   WHERE
     s_suppkey = l_suppkey
     AND o_orderkey = l_orderkey
@@ -207,14 +209,14 @@ FROM (
     l_extendedprice * (1 - l_discount) AS volume,
     n2.n_name AS nation
   FROM
-    test-187010.TPCH.part,
-    test-187010.TPCH.supplier,
-    test-187010.TPCH.lineitem,
-    test-187010.TPCH.orders,
-    test-187010.TPCH.customer,
-    test-187010.TPCH.nation n1,
-    test-187010.TPCH.nation n2,
-    test-187010.TPCH.region
+    part,
+    supplier,
+    lineitem,
+    orders,
+    customer,
+    nation n1,
+    nation n2,
+    region
   WHERE
     p_partkey = l_partkey
     AND s_suppkey = l_suppkey
@@ -244,12 +246,12 @@ FROM (
       o_orderdate) AS o_year,
     l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity AS amount
   FROM
-    test-187010.TPCH.part,
-    test-187010.TPCH.supplier,
-    test-187010.TPCH.lineitem,
-    test-187010.TPCH.partsupp,
-    test-187010.TPCH.orders,
-    test-187010.TPCH.nation
+    part,
+    supplier,
+    lineitem,
+    partsupp,
+    orders,
+    nation
   WHERE
     s_suppkey = l_suppkey
     AND ps_suppkey = l_suppkey
@@ -275,10 +277,10 @@ SELECT
   c_phone,
   c_comment
 FROM
-  test-187010.TPCH.customer,
-  test-187010.TPCH.orders,
-  test-187010.TPCH.lineitem,
-  test-187010.TPCH.nation
+  customer,
+  orders,
+  lineitem,
+  nation
 WHERE
   c_custkey = o_custkey
   AND l_orderkey = o_orderkey
@@ -303,9 +305,9 @@ SELECT
   ps_partkey,
   SUM(ps_supplycost * ps_availqty) AS value
 FROM
-  test-187010.TPCH.partsupp,
-  test-187010.TPCH.supplier,
-  test-187010.TPCH.nation
+  partsupp,
+  supplier,
+  nation
 WHERE
   ps_suppkey = s_suppkey
   AND s_nationkey = n_nationkey
@@ -317,9 +319,9 @@ HAVING
   SELECT
     SUM(ps_supplycost * ps_availqty) * 0.0001000000
   FROM
-    test-187010.TPCH.partsupp,
-    test-187010.TPCH.supplier,
-    test-187010.TPCH.nation
+    partsupp,
+    supplier,
+    nation
   WHERE
     ps_suppkey = s_suppkey
     AND s_nationkey = n_nationkey
@@ -344,8 +346,8 @@ SELECT
   END
     ) AS low_line_count
 FROM
-  test-187010.TPCH.orders,
-  test-187010.TPCH.lineitem
+  orders,
+  lineitem
 WHERE
   o_orderkey = l_orderkey
   AND l_shipmode IN ('MAIL',
@@ -367,9 +369,9 @@ FROM (
     c_custkey,
     COUNT(o_orderkey) AS c_count
   FROM
-    test-187010.TPCH.customer
+    customer
   LEFT OUTER JOIN
-    test-187010.TPCH.orders
+    orders
   ON
     c_custkey = o_custkey
     AND o_comment NOT LIKE '%special%requests%'
@@ -390,8 +392,8 @@ SELECT
   END
     ) / SUM(l_extendedprice * (1 - l_discount)) AS promo_revenue
 FROM
-  test-187010.TPCH.lineitem,
-  test-187010.TPCH.part
+  lineitem,
+  part
 WHERE
   l_partkey = p_partkey
   AND l_shipdate >= date '1995-09-01'
@@ -404,13 +406,13 @@ SELECT
   s_phone,
   total_revenue
 FROM
-  test-187010.TPCH.supplier,
+  supplier,
   (
   SELECT
     l_suppkey AS supplier_no,
     SUM(l_extendedprice * (1 - l_discount)) AS total_revenue
   FROM
-    test-187010.TPCH.lineitem
+    lineitem
   WHERE
     l_shipdate >= CAST('1996-01-01' AS date)
     AND l_shipdate < CAST('1996-04-01' AS date)
@@ -426,7 +428,7 @@ WHERE
       l_suppkey AS supplier_no,
       SUM(l_extendedprice * (1 - l_discount)) AS total_revenue
     FROM
-      test-187010.TPCH.lineitem
+      lineitem
     WHERE
       l_shipdate >= CAST('1996-01-01' AS date)
       AND l_shipdate < CAST('1996-04-01' AS date)
@@ -441,8 +443,8 @@ SELECT
   p_size,
   COUNT(DISTINCT ps_suppkey) AS supplier_cnt
 FROM
-  test-187010.TPCH.partsupp,
-  test-187010.TPCH.part
+  partsupp,
+  part
 WHERE
   p_partkey = ps_partkey
   AND p_brand <> 'Brand#45'
@@ -459,7 +461,7 @@ WHERE
   SELECT
     s_suppkey
   FROM
-    test-187010.TPCH.supplier
+    supplier
   WHERE
     s_comment LIKE '%Customer%Complaints%')
 GROUP BY
@@ -475,8 +477,8 @@ SELECT
   --Query17
   SUM(l_extendedprice) / 7.0 AS avg_yearly
 FROM
-  test-187010.TPCH.lineitem,
-  test-187010.TPCH.part
+  lineitem,
+  part
 WHERE
   p_partkey = l_partkey
   AND p_brand = 'Brand#23'
@@ -485,7 +487,7 @@ WHERE
   SELECT
     0.2 * AVG(l_quantity)
   FROM
-    test-187010.TPCH.lineitem
+    lineitem
   WHERE
     l_partkey = p_partkey);
 SELECT
@@ -497,15 +499,15 @@ SELECT
   o_totalprice,
   SUM(l_quantity)
 FROM
-  test-187010.TPCH.customer,
-  test-187010.TPCH.orders,
-  test-187010.TPCH.lineitem
+  customer,
+  orders,
+  lineitem
 WHERE
   o_orderkey IN (
   SELECT
     l_orderkey
   FROM
-    test-187010.TPCH.lineitem
+    lineitem
   GROUP BY
     l_orderkey
   HAVING
@@ -527,8 +529,8 @@ SELECT
   --Query19
   SUM(l_extendedprice * (1 - l_discount)) AS revenue
 FROM
-  test-187010.TPCH.lineitem,
-  test-187010.TPCH.part
+  lineitem,
+  part
 WHERE
   (p_partkey = l_partkey
     AND p_brand = 'Brand#12'
@@ -574,27 +576,27 @@ SELECT
   s_name,
   s_address
 FROM
-  test-187010.TPCH.supplier,
-  test-187010.TPCH.nation
+  supplier,
+  nation
 WHERE
   s_suppkey IN (
   SELECT
     ps_suppkey
   FROM
-    test-187010.TPCH.partsupp
+    partsupp
   WHERE
     ps_partkey IN (
     SELECT
       p_partkey
     FROM
-      test-187010.TPCH.part
+      part
     WHERE
       p_name LIKE 'forest%')
     AND ps_availqty > (
     SELECT
       0.5 * SUM(l_quantity)
     FROM
-      test-187010.TPCH.lineitem
+      lineitem
     WHERE
       l_partkey = ps_partkey
       AND l_suppkey = ps_suppkey
@@ -609,10 +611,10 @@ SELECT
   s_name,
   COUNT(*) AS numwait
 FROM
-  test-187010.TPCH.supplier,
-  test-187010.TPCH.lineitem l1,
-  test-187010.TPCH.orders,
-  test-187010.TPCH.nation
+  supplier,
+  lineitem l1,
+  orders,
+  nation
 WHERE
   s_suppkey = l1.l_suppkey
   AND o_orderkey = l1.l_orderkey
@@ -622,7 +624,7 @@ WHERE
   SELECT
     *
   FROM
-    test-187010.TPCH.lineitem l2
+    lineitem l2
   WHERE
     l2.l_orderkey = l1.l_orderkey
     AND l2.l_suppkey <> l1.l_suppkey)
@@ -630,7 +632,7 @@ WHERE
   SELECT
     *
   FROM
-    test-187010.TPCH.lineitem l3
+    lineitem l3
   WHERE
     l3.l_orderkey = l1.l_orderkey
     AND l3.l_suppkey <> l1.l_suppkey
@@ -654,7 +656,7 @@ FROM (
     SUBSTRING(c_phone, 1, 2) AS cntrycode,
     c_acctbal
   FROM
-    test-187010.TPCH.customer
+    customer
   WHERE
     SUBSTRING(c_phone, 1, 2) IN ('13',
       '31',
@@ -667,7 +669,7 @@ FROM (
     SELECT
       AVG(c_acctbal)
     FROM
-      test-187010.TPCH.customer
+      customer
     WHERE
       c_acctbal > 0.00
       AND SUBSTRING(c_phone, 1, 2) IN ('13',
@@ -681,7 +683,7 @@ FROM (
     SELECT
       *
     FROM
-      test-187010.TPCH.orders
+      orders
     WHERE
       o_custkey = c_custkey)) AS custsale
 GROUP BY
