@@ -34,4 +34,4 @@ Results for BI Engine Only : https://datastudio.google.com/reporting/b162bcc1-ba
 
 # PowerBI Datamart
 
-it is the esiest to setup, loading data uses only GUI, I love it.
+it is the esiest to setup, loading data uses only GUI, I love it, but it is a read only DB, you can can't delete rows etc
