@@ -34,4 +34,8 @@ Results for BI Engine Only : https://datastudio.google.com/reporting/b162bcc1-ba
 
 # PowerBI Datamart
 
-it is the esiest to setup, loading data uses only GUI, I love it, but it is a read only DB, you can can't delete rows etc
+it is the easiest to setup, loading data uses only GUI, I love it, but it is a read only DB, you can can't delete rows etc
+
+#Apache Spark
+
+added Pyspark, just for fun, all I can say, it is really slow in a single node system
