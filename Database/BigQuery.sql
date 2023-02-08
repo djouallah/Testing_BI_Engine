@@ -317,7 +317,7 @@ GROUP BY
 HAVING
   SUM(ps_supplycost * ps_availqty) > (
   SELECT
-    SUM(ps_supplycost * ps_availqty) * 0.0001000000
+    SUM(ps_supplycost * ps_availqty) * (0.0001/10)
   FROM
     partsupp,
     supplier,
