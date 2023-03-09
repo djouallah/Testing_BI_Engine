@@ -1,5 +1,7 @@
 # Update : added results for SF100
 
+Blog : https://datamonkeysite.com/2023/03/09/benchmarking-snowflake-databricks-synapse-bigquery-and-duckdb-using-tpch-sf100/
+
 # Testing OLAP SQL Engine using TPC-H
 
 it started as testing BigQuery BI engine for fun, but I did found it easy to test other Engine too, Please check this blog for Background
