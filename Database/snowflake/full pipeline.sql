@@ -1,5 +1,5 @@
 create DATABASE IDENTIFIER('"TPCH"') COMMENT = '' ;
-USE TPCH
+USE TPCH ;
 create or replace schema EXTERNAL ;
 USE TPCH.EXTERNAL ;
 
