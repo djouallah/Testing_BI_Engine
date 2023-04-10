@@ -1,8 +1,18 @@
+create DATABASE IDENTIFIER('"TPCH"') COMMENT = '' ;
+USE TPCH
+create or replace schema EXTERNAL ;
+USE TPCH.EXTERNAL ;
+
 CREATE OR REPLACE STAGE my_azure_stage
   URL='azure://yyyy.blob.core.windows.net/xxxx'
   CREDENTIALS=(AZURE_SAS_TOKEN='xxxxxxxxxxxxxxxxx') ;
   
--- notice that snowflake is case sensitive
+  
+CREATE OR REPLACE FILE FORMAT my_parquet_format
+  TYPE = PARQUET
+  COMPRESSION = SNAPPY;
+  
+-- notice that snowflake is case sensitive, I changed field name to capital
 
 create or replace external table TPCH.EXTERNAL_TABLE.CUSTOMER(
 	"C_ACCTBAL" NUMBER(15,2) AS (CAST(GET($1, 'c_acctbal') AS NUMBER(15,2))),
@@ -114,6 +124,7 @@ file_format=my_parquet_format
 ;
 
 --Load data to Snowflake DB
+USE TPCH
 create or replace schema internal ;
 create or replace table lineitem as select L_SHIPDATE, L_COMMITDATE, L_QUANTITY, L_EXTENDEDPRICE,
 L_SUPPKEY, L_LINENUMBER, L_DISCOUNT, L_TAX, L_ORDERKEY, L_PARTKEY, L_RECEIPTDATE, L_SHIPINSTRUCT,
