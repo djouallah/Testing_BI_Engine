@@ -67,7 +67,7 @@ ORDER BY
     s_acctbal DESC,
     n_name,
     s_name,
-    p_partkey
+    p_partkey ;
 
 
 SELECT
@@ -93,7 +93,7 @@ GROUP BY
     o_shippriority
 ORDER BY
     revenue DESC,
-    o_orderdate
+    o_orderdate ;
 
 
 
